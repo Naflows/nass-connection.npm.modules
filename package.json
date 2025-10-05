@@ -1,0 +1,41 @@
+{
+  "name": "nass-connection",
+  "version": "1.0.0",
+  "description": "Naflows Authentication Service System's module for developers using the Naflows tunnels to access secure backend features and user's data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naflows/nass-connection.npm.modules.git"
+  },
+  "keywords": [
+    "backend",
+    "database",
+    "tunnels",
+    "endpoint",
+    "api"
+  ],
+  "author": "NAFLOWS - Mougel David",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Naflows/nass-connection.npm.modules/issues"
+  },
+  "homepage": "https://github.com/Naflows/nass-connection.npm.modules#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express-fingerprint": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.6.2",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.4",
+    "typescript": "^5.9.3"
+  }
+}
