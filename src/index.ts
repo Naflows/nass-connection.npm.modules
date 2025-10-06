@@ -4,7 +4,7 @@ import Fingerprint from 'express-fingerprint';
 import cookieParser from 'cookie-parser';
 import { NASSSession } from './types/session.type';
 import { loadTokenFromDisk, saveTokenToDisk } from './secure/save-token';
-
+import fs from 'fs';
 
 
 
@@ -12,20 +12,40 @@ import { loadTokenFromDisk, saveTokenToDisk } from './secure/save-token';
 
 // Usage: initNaflowsInstance("your_key", "your_id");
 async function initNaflowsInstance(key: string, id: string, viaNetwork: boolean = false): Promise<{
-    success : boolean;
-    way : 'cache' | 'network';
+    success: boolean;
+    way: 'cache' | 'network';
 }> {
     // This function initializes the API instance to Naflows System, and works securely on the fact that the API key is never exposed to the client side and is private.
     // Publicily exposed information is the API ID, which is not sensitive.
     try {
         if (!key || !id) throw new Error('API key and ID must be provided');
 
-        if (loadTokenFromDisk(key) && !viaNetwork) {
+        let load;
+        try {
+            if (!viaNetwork) {
+                load = loadTokenFromDisk(key);
+            }
+        } catch (e) {
+            load = null;
+        }
+
+
+
+        if (load != null) {
+            await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/dev/init-test`, {
+                apiID: id,
+                token: load?.token,
+                tokenBirth: load?.tokenBirth
+            }).then((res) => {
+                if (res.status !== 200) throw new Error(res.data.message);
+            }, (err) => {
+                throw new Error('Token invalid.');
+            });
             return { success: true, way: 'cache' };
         } else {
             const response = await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/dev/init`, {
-                apiKey : key,
-                apiID : id
+                apiKey: key,
+                apiID: id
             });
             if (response.status === 200) {
                 const { token, token_birth } = response.data.data;
