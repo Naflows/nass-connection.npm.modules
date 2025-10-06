@@ -16,8 +16,9 @@ function generateTokenFile() {
 generateTokenFile();
 
 
-const key = "11e7276fd5d2b0d8c046f369e089030a51441e2dfbe380fabae1424add25b4db";
-const id = "0008702c-9aa1-49fe-8a45-9aa4c5f656a91759728286498";
+const key = "54b4ad5fb7fbd7097acc178c3bf76dbd3844dfc0fb2ebfb44783048d3cd9ffc9";
+const id = "852ec397-10d1-4d38-83a7-0e2ef75257211759732749468";
+const devKey = "7cd086e719b4bd51859e6b4017b6c6e87588217fabf1504dcd23aaea0b6374b2";
 
 
 // ###################################################################################### //
@@ -44,3 +45,19 @@ describe("Initialize Instance", () => {
     });
 })
 
+
+
+describe("Instance pass-through", () => {
+    it('should pass-through successfully', async () => {
+        const result = await nass.tunnel.create(id, devKey);
+        expect(result).toStrictEqual({ success: true, message: 'Not implemented yet.' });
+    });
+
+    it('should fail to pass-through with invalid developer key', async () => {
+        await expect(nass.tunnel.create(id, 'invalid_dev_key')).rejects.toThrow('Failed to pass through: Error: Invalid developer access key or service ID.');
+    });
+
+    it('should fail to pass-through with invalid user ID', async () => {
+        await expect(nass.tunnel.create('invalid_user_id', devKey)).rejects.toThrow('Failed to pass through: Error: Invalid developer access key or service ID.');
+    });
+});
