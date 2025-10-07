@@ -16,9 +16,9 @@ function generateTokenFile() {
 generateTokenFile();
 
 
-const key = "54b4ad5fb7fbd7097acc178c3bf76dbd3844dfc0fb2ebfb44783048d3cd9ffc9";
-const id = "852ec397-10d1-4d38-83a7-0e2ef75257211759732749468";
-const devKey = "7cd086e719b4bd51859e6b4017b6c6e87588217fabf1504dcd23aaea0b6374b2";
+const key = "94e8be0ba869a144a8f8ca77c2297ed37aca6b349a7628dd3e53e967a30ef072";
+const id = "3933bd09-2277-41e4-ad1d-32c52c1ab5821759817021385";
+const devKey = "19381678f6c6d8dde36d8b8fc45554568fb2c4d644c66cacb5187f13eab1b18c";
 
 
 // ###################################################################################### //
@@ -26,21 +26,21 @@ const devKey = "7cd086e719b4bd51859e6b4017b6c6e87588217fabf1504dcd23aaea0b6374b2
 describe("Initialize Instance", () => {
 
     it('should fail to initialize from an existing invalid token', async () => {
-        await expect(nass.initNaflowsInstance(BefKey, BefID)).rejects.toThrow('Failed to initialize Naflows instance: Error: Token invalid.');
+        await expect(nass.initNaflowsInstance(BefKey, BefID, devKey)).rejects.toThrow('Failed to initialize Naflows instance: Error: Token invalid.');
     });
 
 
     it('should initialize the Naflows instance successfully', async () => {
-        const result = await nass.initNaflowsInstance(key, id, true);
+        const result = await nass.initNaflowsInstance(key, id, devKey, true);
         expect(result).toStrictEqual({ success: true, way: 'network'});
     });
 
     it('should fail to initialize with invalid credentials', async () => {
-        await expect(nass.initNaflowsInstance('invalid_key', 'invalid_id',true)).rejects.toThrow('Failed to initialize Naflows instance');
+        await expect(nass.initNaflowsInstance('invalid_key', 'invalid_id', devKey, true)).rejects.toThrow('Failed to initialize Naflows instance');
     });
 
     it('should initialize the Naflows instance again (with cached token)', async () => {
-        const result = await nass.initNaflowsInstance(key, id);
+        const result = await nass.initNaflowsInstance(key, id, devKey, false);
         expect(result).toStrictEqual({ success: true, way: 'cache' });
     });
 })

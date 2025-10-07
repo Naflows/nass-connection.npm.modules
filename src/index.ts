@@ -12,7 +12,7 @@ import { passThrough } from './user-actions';
 
 
 // Usage: initNaflowsInstance("your_key", "your_id");
-async function initNaflowsInstance(key: string, id: string, viaNetwork: boolean = false): Promise<{
+async function initNaflowsInstance(key: string, id: string, devKey: string, viaNetwork: boolean = false): Promise<{
     success: boolean;
     way: 'cache' | 'network';
 }> {
@@ -36,7 +36,8 @@ async function initNaflowsInstance(key: string, id: string, viaNetwork: boolean 
             await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/instance/init-test`, {
                 apiID: id,
                 token: load?.token,
-                tokenBirth: load?.tokenBirth
+                tokenBirth: load?.tokenBirth,
+                devKey: devKey
             }).then((res) => {
                 if (res.status !== 200) throw new Error(res.data.message);
             }, (err) => {
@@ -46,7 +47,8 @@ async function initNaflowsInstance(key: string, id: string, viaNetwork: boolean 
         } else {
             const response = await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/instance/init`, {
                 apiKey: key,
-                apiID: id
+                apiID: id,
+                devKey: devKey
             }).catch((err) => {
                 throw new Error(err);
             });
