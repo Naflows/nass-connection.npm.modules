@@ -16,9 +16,9 @@ function generateTokenFile() {
 generateTokenFile();
 
 
-const key = "94e8be0ba869a144a8f8ca77c2297ed37aca6b349a7628dd3e53e967a30ef072";
-const id = "3933bd09-2277-41e4-ad1d-32c52c1ab5821759817021385";
-const devKey = "19381678f6c6d8dde36d8b8fc45554568fb2c4d644c66cacb5187f13eab1b18c";
+const key = "da36e512610b00390ca00d9e64ee2f2dbafa541030de478f71d5de4dd8b7b205";
+const id = "1bd319b6-5933-4b6a-84ec-c210915ba3cf1760259388936";
+const devKey = "0c2baa736b31b7bd5f04d2b970a3156d7636c06dd8f4603f8285d41acc6d2885";
 
 
 // ###################################################################################### //
@@ -47,17 +47,24 @@ describe("Initialize Instance", () => {
 
 
 
-describe("Instance pass-through", () => {
-    it('should pass-through successfully', async () => {
-        const result = await nass.tunnel.create(id, devKey);
-        expect(result).toStrictEqual({ success: true, message: 'Not implemented yet.' });
+describe("Instance tunnel creation", () => {
+    it('should create a tunnel successfully', async () => {
+        const result = await nass.tunnel.create(id, key, devKey, "/user/login", ["auth"]);
+        expect(result).toStrictEqual({ success: true, message: "Tunnel created successfully." });
     });
 
-    it('should fail to pass-through with invalid developer key', async () => {
-        await expect(nass.tunnel.create(id, 'invalid_dev_key')).rejects.toThrow('Failed to pass through: Error: Invalid developer access key or service ID.');
+    it("shouldn't create the same tunnel twice", async () => {
+        const result = await nass.tunnel.create(id, key, devKey, "/user/login", ["auth"]);
+        expect(result).toStrictEqual({ success: false, message: "A tunnel already exists for this target URL." });
     });
 
-    it('should fail to pass-through with invalid user ID', async () => {
-        await expect(nass.tunnel.create('invalid_user_id', devKey)).rejects.toThrow('Failed to pass through: Error: Invalid developer access key or service ID.');
+    it("shouldn't create a tunnel with invalid credentials", async () => {
+        const result = await nass.tunnel.create("invalid_id", "invalid_key", devKey, "/user/login", ["auth"]);
+        expect(result).toStrictEqual({ success: false, message: 'User is not a developer for this service.' });
+    });
+    
+    it("shouldn't create a tunnel with a non-existing right", async () => {
+        const result = await nass.tunnel.create(id, key, devKey, "/user/login/test", ["non_existing_right"]);
+        expect(result).toStrictEqual({ success: false, message: 'Right "non_existing_right" does not exist.' });
     });
 });

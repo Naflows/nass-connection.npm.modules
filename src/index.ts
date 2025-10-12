@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import { NASSSession } from './types/session.type';
 import { loadTokenFromDisk, saveTokenToDisk } from './secure/save-token';
 import fs from 'fs';
-import { passThrough } from './user-actions';
+import { createTunnel } from './dev-actions/tunnels/create';
 
 
 
@@ -33,7 +33,7 @@ async function initNaflowsInstance(key: string, id: string, devKey: string, viaN
 
 
         if (load != null) {
-            await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/instance/init-test`, {
+            await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/dev/instance/init-test`, {
                 apiID: id,
                 token: load?.token,
                 tokenBirth: load?.tokenBirth,
@@ -45,7 +45,7 @@ async function initNaflowsInstance(key: string, id: string, devKey: string, viaN
             });
             return { success: true, way: 'cache' };
         } else {
-            const response = await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/instance/init`, {
+            const response = await axios.post(`${process.env.NAFLOWS_NASS_URL}/nass/dev/instance/init`, {
                 apiKey: key,
                 apiID: id,
                 devKey: devKey
@@ -72,6 +72,6 @@ async function initNaflowsInstance(key: string, id: string, devKey: string, viaN
 export const nass = {
     initNaflowsInstance,
     tunnel : {
-        create : passThrough
+        create : createTunnel
     }
 }
