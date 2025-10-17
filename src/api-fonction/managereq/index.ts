@@ -14,9 +14,9 @@ function sendCookies(res: Response, data: any) {
     const session = data.data.middleware.session;
     const uid = data.data.middleware.user_id;
     console.log("Setting cookies:", { token, session, uid });
-    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'None' });
-    res.cookie("session", session, { httpOnly: true, secure: true, sameSite: 'None' });
-    res.cookie("uid", uid, { httpOnly: true, secure: true, sameSite: 'None' });
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none' });
+    res.cookie("session", session, { httpOnly: true, secure: true, sameSite: 'none' });
+    res.cookie("uid", uid, { httpOnly: true, secure: true, sameSite: 'none' });
 }
 
 function getCookies(req : Request): { sessionID: string | null; token: string | null; uid: string | null } {
@@ -31,16 +31,14 @@ function getCookies(req : Request): { sessionID: string | null; token: string | 
 
 
 
-async function managereq(req: Request, res: Response, route: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any): Promise<boolean> {
+async function managereq(req: Request, res: Response, service_id: string, service_key : string, route: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any): Promise<boolean> {
     // Warning: users must have set a tunnel before using this function.
     // This function will use the tunnel to forward the request to the target Naflows API endpoint and ensure the connection of the user is secure and valid.
 
-    if (!process.env.NASS_API_KEY || !process.env.NASS_API_ID) {
-        res.status(500).json({ success: false, message: "NASS API key or ID not set in environment variables." });
-        return false;
-    }
+    if (!service_id || !service_key) throw new Error('Service ID and key must be provided.');
+    if (!route || !method) throw new Error('Route and method must be provided.');
 
-    const serviceToken = loadTokenFromDisk(process.env.NASS_API_KEY);
+    const serviceToken = loadTokenFromDisk(service_key);
 
 
     const { sessionID, token, uid } = getCookies(req);
@@ -54,6 +52,7 @@ async function managereq(req: Request, res: Response, route: string, method: 'GE
             token: token || null,
             user_id: uid || null,
         },
+        ...body,
         request: {
             method: req.method,
             url: req.originalUrl,
@@ -61,7 +60,7 @@ async function managereq(req: Request, res: Response, route: string, method: 'GE
             request_date: Date.now()
         },
         client: {
-            service: process.env.NASS_API_ID,
+            service: service_id,
             token: serviceToken?.token || null,
             tokenBirth: serviceToken?.tokenBirth || null
         }

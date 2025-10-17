@@ -6,6 +6,7 @@ import { NASSSession } from './types/session.type';
 import { loadTokenFromDisk, saveTokenToDisk } from './secure/save-token';
 import fs from 'fs';
 import { createTunnel } from './dev-actions/tunnels/create';
+import { managereq } from './api-fonction/managereq';
 
 
 
@@ -40,7 +41,7 @@ async function initNaflowsInstance(key: string, id: string, devKey: string, viaN
                 devKey: devKey
             }).then((res) => {
                 if (res.status !== 200) throw new Error(res.data.message);
-            }, (err) => {
+            }).catch((err) => {
                 throw new Error('Token invalid.');
             });
             return { success: true, way: 'cache' };
@@ -71,6 +72,7 @@ async function initNaflowsInstance(key: string, id: string, devKey: string, viaN
 
 export const nass = {
     initNaflowsInstance,
+    managereq,
     tunnel : {
         create : createTunnel
     }
