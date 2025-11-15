@@ -1,6 +1,7 @@
 import { managereq } from '../src/api-fonction/managereq';
 import { nass } from '../src/index';
 import { saveTokenToDisk } from '../src/secure/save-token';
+import { describe, it, expect } from '@jest/globals';
 
 // ###################################################################################### //
 // Initialize environment for tests:
@@ -17,9 +18,9 @@ function generateTokenFile() {
 generateTokenFile();
 
 
-const key = "35e1a8f20eac4bbfe554fc044ef34b6a9482027d33c93315f80ba19aa1028f45";
-const id = "879d000f-d5d6-4dc0-8b7d-16656314417f1760684158154";
-const devKey = "1d0fea0bb1af72e99164a69e92c364b355a157422f5161d6f04d3569f3c10e86";
+const key = "a54254f8981326820c8973205e2f67f9045097ad34542fb6501ffc09cc38f863";
+const id = "c474c5aa-b11d-4da5-ad93-f0501edae5f71762964764337";
+const devKey = "b56f2051dc90dc42cccef4d1c9f34333959c65b2456c4c0b177a753517e205e9";
 
 
 // ###################################################################################### //
